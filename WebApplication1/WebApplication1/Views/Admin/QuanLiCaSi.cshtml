@@ -1,0 +1,128 @@
+﻿@model IEnumerable<WebApplication1.Models.Singer>
+@{
+    ViewBag.Title = "QuanLiCaSi";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    int singerCount = 1;
+}
+
+@section css {
+    <link href="~/Content/Admin-style/sweetalert-master/lib/sweet-alert.css" rel="stylesheet" />
+    <link href="~/Content/dataTable/datatables.min.css" rel="stylesheet" />
+}
+
+@section js {
+    <script src="~/Content/Admin-style/sweetalert-master/lib/sweet-alert.min.js"></script>
+    <script src="~/Content/dataTable/datatables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#tbl_Singers').DataTable({
+                "searching": true,
+                "bLengthChange": false,
+                "bInfo": false,
+                "pageLength": 10,
+                "scrollCollapse": true,
+                "paginate": true,
+                "ordering": true,
+                "columnDefs": [
+                    { "width": "auto", "targets": [0, 1, 2, 3, 4, 5] },
+                ]
+            });
+
+            $('a[data-del-singerid]').click(function (e) {
+                e.preventDefault();
+                var id = $(this).attr("data-del-singerid");
+                console.log("Deleting singer with ID: " + id); // Add this line for debugging
+                swal({
+                    title: "Bạn có chắc chắn?",
+                    text: "Ca sĩ sẽ bị xóa và không thể phục hồi!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Vâng, xóa nó!",
+                    cancelButtonText: "Không, hủy bỏ!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Admin/DeleteSinger',
+                                contentType: 'application/json; charset=utf-8',
+                                data: JSON.stringify(id),
+                                dataType: 'json',
+                                success: function (response) {
+                                    if (response.status) {
+                                        swal("Đã xóa!", response.message, "success");
+                                        setTimeout(function () { location.reload(); }, 3000);
+                                    } else {
+                                        swal("Lỗi!", response.message, "error");
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    swal("Lỗi!", "Có lỗi xảy ra khi xóa ca sĩ.", "error");
+                                }
+                            });
+                        } else {
+                            swal("Đã hủy", "Ca sĩ không bị xóa!", "error");
+                        }
+                    });
+            });
+        });
+    </script>
+}
+
+<h2 style="color:darkred">Quản Lí Ca Sĩ</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <a asp-controller="Admin" asp-action="CaSiMoi" role="button" class="btn btn-default">
+            <i class="fa fa-plus"></i>&nbsp;Thêm Ca Sĩ
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table id="tbl_Singers" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên Ca Sĩ</th>
+                    <th>Nội dung</th>
+                    <th>Hình Ảnh</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var singer in Model)
+                {
+                    <tr>
+                        <td>@(singerCount++)</td>
+                        <td>@singer.Name</td>
+                        <td> @Html.Raw(@singer.Content)</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(singer.Image))
+                            {
+                                <img src="@singer.Image" alt="Image" style="width: 50px; height: 50px;" />
+                            }
+                            else
+                            {
+                                <span>Không có ảnh</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="@Url.Action("SuaCaSi", "Admin", new { id = singer.Id })" class="btn btn-default btn-xs">
+                                <i class="fa fa-pencil"></i> Sửa
+                            </a>
+                            <a href="@Url.Action("DeleteSinger", "Admin", new { id = singer.Id })" class="btn btn-default btn-xs" data-del-singerid="@singer.Id">
+    <i class="fa fa-remove"></i> Xóa
+</a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
