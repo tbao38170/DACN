@@ -1,0 +1,144 @@
+﻿@using WebApplication1.Models;
+@model WebApplication1.ViewModels.ArticleManagement;
+@{
+    ViewBag.Title = "SuaBaiViet";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Sửa Bài Viết</h2>
+
+@section js{
+    <script src="~/Content/ckeditor/ckeditor.js"></script>
+    <script src="~/Content/ckfinder/ckfinder.js"></script>
+    <script>
+        CKEDITOR.replace("txtNoiDungHopAm");
+        function BrowseServer() {
+            var finder = new CKFinder();
+            finder.selectActionFunction = SetFileField;
+            finder.popup();
+        }
+    </script>
+}
+
+<script src="~/Content/autocomplete/autocomplete.js"></script>
+<style>
+    /*AutoComplete*/
+    .autocomplete-suggestions {
+        border: 1px solid #999;
+        background: #FFF;
+        overflow: auto;
+    }
+
+    .autocomplete-suggestion {
+        padding: 2px 5px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .autocomplete-selected {
+        background: #F0F0F0;
+    }
+
+    .autocomplete-suggestions strong {
+        font-weight: normal;
+        color: #3399FF;
+    }
+
+    .autocomplete-group {
+        padding: 2px 5px;
+    }
+
+        .autocomplete-group strong {
+            display: block;
+            border-bottom: 1px solid #000;
+        }
+</style>
+
+<form class="form-horizontal" method="post" action="" id="Editform" enctype="multipart/form-data">
+    @foreach (var song in Model.Songs)
+    {
+        <div class="form-group">
+            <label for="txtTenHopAm" class="col-sm-2 control-label">Tên hợp âm</label>
+            <div class="col-sm-10">
+                <input type="hidden" id="txtMa" name="Id" value="@song.Id" />
+                <input type="hidden" id="txtNgay" name="Date" value="@song.DateTime" />
+                <input type="text" class="form-control" id="txtTenHopAm" name="Name" value="@song.Name" required />
+            </div>
+        </div>
+    }
+
+    <div class="form-group">
+        @foreach (var singer in Model.Singers)
+        {
+            <label class="col-sm-2 control-label">Ca sĩ</label>
+            <div class="col-sm-4">
+                <input class="form-control" id="txtCaSi" name="Singer" type="text" autocomplete="off" required placeholder="Nhập tên ca sĩ" value="@singer.Name">
+            </div>
+        }
+
+        <label class="col-sm-2 control-label">Sáng Tác</label>
+        <div class="col-sm-4">
+            @foreach (var author in Model.Authors)
+            {
+                <input class="form-control" id="txtSangTac" name="Author" type="text" autocomplete="off" required placeholder="Nhập người sáng tác" value="@author.AuthorName">
+            }
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Tông</label>
+        <div class="col-sm-4">
+            @foreach (var chord in Model.Chords)
+            {
+                <input class="form-control" id="txtTone" name="Tone" type="text" autocomplete="off" required placeholder="Nhập tông hợp âm" value="@chord.Name">
+            }
+        </div>
+
+        <label class="col-sm-2 control-label">Thể Loại</label>
+        <div class="col-sm-4">
+            @foreach (var category in Model.Categories)
+            {
+                <input class="form-control" id="txtTheLoai" name="Category" type="text" autocomplete="off" required placeholder="Nhập thể loại hợp âm" value="@category.Name">
+            }
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-4 control-label">Lời và hợp âm (Hợp âm phải bỏ trong dấu ngoặc nhọn {}).</label>
+        <div class="col-sm-10 col-sm-offset-2">
+            @foreach (var song in Model.Songs)
+            {
+                <textarea class="form-control" id="txtNoiDungHopAm" name="Content">@Html.Raw(song.Content)</textarea>
+            }
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-danger" id="btnLuu">
+                <i class="fa fa-check"></i>&nbsp;Cập nhật
+            </button>
+            <a href="@Url.Action("QuanLiBaiViet","Admin")" class="btn btn-success">
+                <i class="fa fa-reply"></i>&nbsp;Danh sách bài viết
+            </a>
+        </div>
+    </div>
+</form>
+
+<script>
+    $('#txtCaSi, #txtSangTac').autocomplete({
+        minChars: 1,
+        serviceUrl: '/Public/AutoCompleteNgheSi',
+    });
+
+    $('#txtTone').autocomplete({
+        minChars: 1,
+        serviceUrl: '/Public/AutoCompleteTone',
+    });
+
+    $('#txtTheLoai').autocomplete({
+        minChars: 1,
+        serviceUrl: '/Public/AutoCompleteTheLoai',
+    });
+
+</script>

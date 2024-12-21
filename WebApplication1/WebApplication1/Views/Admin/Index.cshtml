@@ -1,0 +1,283 @@
+﻿@model WebApplication1.ViewModels.ArticleManagement;
+@{
+    ViewBag.Title = "Quản Trị Viên";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .chart-container {
+        width: 90%;
+        max-width: 1000px;
+        margin: 40px auto;
+    }
+
+    .btn-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        margin: 0 10px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        transition: background-color 0.3s ease;
+    }
+
+    #weekBtn {
+        background-color: #28a745;
+    }
+
+        #weekBtn:hover {
+            background-color: #218838;
+        }
+
+    #monthBtn {
+        background-color: #007bff;
+    }
+
+        #monthBtn:hover {
+            background-color: #0056b3;
+        }
+
+    #yearBtn {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+        #yearBtn:hover {
+            background-color: #e0a800;
+        }
+
+    .panel-green {
+        border-color: #5cb85c;
+    }
+
+        .panel-green > .panel-heading {
+            background-color: #5cb85c;
+            border-color: #5cb85c;
+            color: #fff;
+        }
+
+    .panel-footer {
+        background-color: #f5f5f5;
+    }
+
+        .panel-footer:hover {
+            background-color: #e0e0e0;
+        }
+
+    .page-header {
+        color: #343a40;
+    }
+
+    h2 {
+        text-align: center;
+        color: #343a40;
+    }
+</style>
+<h2>Xin Chào Quản Trị Viên</h2>
+
+<div class="row">
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa-solid fa-file-audio" style="color: #ffffff; font-size: 3em;"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">
+                            <label>@ViewBag.slBaiViet</label>
+                        </div>
+                        <div>Số Lượng Bài Viết</div>
+                    </div>
+                </div>
+            </div>
+            <a href="@Url.Action("QuanLiBaiViet", "Admin")">
+                <div class="panel-footer">
+                    <span class="pull-left">Xem chi tiết</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-tasks fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">
+                            <label>@ViewBag.slAuthors</label>
+                        </div>
+                        <div>Số Lượng Tác giả!</div>
+                    </div>
+                </div>
+            </div>
+            <a href="@Url.Action("QuanLiCaSi", "Admin")">
+                <div class="panel-footer">
+                    <span class="pull-left">Xem chi tiết</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-tasks fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">
+                            <label>@ViewBag.slCategory</label>
+                        </div>
+                        <div>Số Lượng Thể Loại!</div>
+                    </div>
+                </div>
+            </div>
+            <a href="@Url.Action("QuanLiBaiViet", "Admin")">
+                <div class="panel-footer">
+                    <span class="pull-left">Xem chi tiết</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-tasks fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">
+                            <label>@ViewBag.slChord</label>
+                        </div>
+                        <div>Số Lượng Hợp Âm</div>
+                    </div>
+                </div>
+            </div>
+            <a href="@Url.Action("QuanLiBaiViet", "Admin")">
+                <div class="panel-footer">
+                    <span class="pull-left">Xem chi tiết</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <h2>Thống kê lượt xem</h2>
+    <div class="chart-container">
+        <canvas id="myChart" width="1000" height="500"></canvas>
+      
+    <div class="btn-container">
+        <button class="btn" id="weekBtn">View by Week</button>
+        <button class="btn" id="monthBtn">View by Month</button>
+        <button class="btn" id="yearBtn">View by Year</button>
+        <button class="btn" id="exportBtn">Export to Excel</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+                const weekData = {
+                    labels: ["Tuần 1", "Tuần 2", "Tuần 3", "Tuần 4"],
+                    values: [50, 70, 60, 80]
+                };
+
+                const monthData = {
+                    labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7"],
+                    values: [65, 59, 80, 81, 56, 55, 40]
+                };
+
+                const yearData = {
+                    labels: ["2021", "2022", "2023", "2024"],
+                    values: [400, 500, 600, 700]
+                };
+
+            let currentData = monthData; // Default view
+
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: currentData.labels,
+                    datasets: [{
+                            label: 'Dữ liệu',
+                        data: currentData.values,
+                        backgroundColor: [
+                            'rgba(40, 167, 69, 0.5)',
+                            'rgba(0, 123, 255, 0.5)',
+                            'rgba(255, 193, 7, 0.5)',
+                            'rgba(108, 117, 125, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(0, 123, 255, 1)',
+                            'rgba(255, 193, 7, 1)',
+                            'rgba(108, 117, 125, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('weekBtn').addEventListener('click', () => {
+                updateChartData(weekData);
+            });
+
+            document.getElementById('monthBtn').addEventListener('click', () => {
+                updateChartData(monthData);
+            });
+
+            document.getElementById('yearBtn').addEventListener('click', () => {
+                updateChartData(yearData);
+            });
+
+            document.getElementById('exportBtn').addEventListener('click', () => {
+                exportToExcel(currentData);
+            });
+
+            function updateChartData(newData) {
+                currentData = newData;
+                myChart.data.labels = newData.labels;
+                myChart.data.datasets[0].data = newData.values;
+                myChart.update();
+            }
+
+            function exportToExcel(data) {
+                const ws = XLSX.utils.aoa_to_sheet([
+                    ['Label', 'Value'],
+                    ...data.labels.map((label, index) => [label, data.values[index]])
+                ]);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+                XLSX.writeFile(wb, 'chart_data.xlsx');
+            }
+        });
+    </script>
+</div>
