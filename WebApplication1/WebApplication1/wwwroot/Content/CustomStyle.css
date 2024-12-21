@@ -1,0 +1,468 @@
+/*==Reset CSS==*/
+/*==Style cơ bản cho website==*/
+
+body {
+    font-family: "Nunito", "Roboto-Regular", "Lucida Grande", sans-serif;
+    color: #333;
+    font-size: 15px;
+}
+h1 h2 h3 h4 {
+    font-family: "Nunito", "Roboto-Bold", "Lucida Grande", sans-serif;
+}
+
+/*==Style cho menu===*/
+#menu {
+    /*background-image: url(../image/head1.jpg);*/
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+#menu ul {
+
+    list-style-type: none;
+    text-align: center;
+    float:left
+    /*margin-top: 30px;*/
+}
+#menu li {
+  color: #f1f1f1;
+  display: inline-block;
+  width: auto;
+  height: 40px;
+  line-height: 40px;
+  margin-left: 20px;
+}
+#menu a {
+  text-decoration: none;
+  display: block;
+  color: #262626;
+  font-size: 15px;
+  font-weight: 600;
+}
+#menu a:hover {
+  background: #F1F1F1;
+  color: #333;
+}
+
+.main-title{
+    border-bottom:2px solid #515252;
+    margin-bottom : 26px;
+    line-height : 2
+}
+.main-title > span {
+    background-color:#515252; 
+    color:white;
+    padding: 7px 12px 4px 12px
+}
+
+/*==slider==*/
+.carousel{
+	margin-top: 20px;
+}
+.carousel .item{
+	min-height: 180px; /* Prevent carousel from being distorted if for some reason ~/image doesn't load */
+}
+.carousel .item img{
+	margin: 0 auto; /* Align slide ~/image horizontally center */
+}
+.bs-example{
+	margin: 20px;
+}
+/*==custom==*/
+.panel-title{
+	text-align: center;
+	font-weight: bold;
+	
+}
+.panel-body {
+    background-color: GhostWhite ;
+    /*background-image: url(../image/bg-pannel3.jpg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;*/
+}
+.panel-body ul li{
+	list-style-type: none;
+	margin-top: 5px;
+	font-weight: bold;
+}
+.panel-body ul li a:hover{
+	font-size: 15px;
+}
+.panel-heading>h3{
+    color:yellow;
+}
+h3:hover {
+    color: red;
+    cursor: pointer;
+}
+h4 > span:hover {
+    color: red;
+    cursor: pointer;
+}
+.img-lienket img{
+	width:100%;
+}
+.img-lienket img:hover {
+        transform: scale(1.05);
+        transition: transform .3s ease 0s;
+        transition-duration: .4s;
+        cursor: pointer;
+        /*border: solid 2px red;*/
+}
+/*.thumbnail:hover{
+    border: solid 1px orange;
+}*/
+.thumbnail>img{
+	width: 400px;
+    height: 200px;
+}
+#lastLi{
+	float:right;
+}
+
+/*.post img:hover {
+    transform: scale(1.05);
+    transition: transform .3s ease 0s;
+    transition-duration: .4s;
+    cursor: pointer;
+
+}
+.post {
+    border: solid 1px red;
+}*/
+.service-package>li{
+	width:100%;
+	height:40px;
+}
+.caption > h4 > a {
+    font-weight: bold;
+    font-family: Roboto-Bold;
+    text-decoration: none;
+    color : #111;
+    text-align: justify;
+    font-family: Nunito,Helvetica,sans-serif;
+    font-weight: 400;
+    font-size: 19px;
+    text-align: justify;
+    line-height: 25px;
+}
+.caption > h4 > a:hover {
+    color : #428bca;
+}
+
+.panel-title {
+    font-family: Roboto-Bold;
+    font-size: 20px;
+}
+.panel-primary > .panel-heading {
+    background-color: white;
+    background-image: url(../image/head1.jpg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+/*.panel-heading {
+    background-image: url(../image/Label.png);
+    background-repeat : no-repeat;
+    background-position: center;
+
+}*/
+/*
+.service-package > li > a {
+
+}*/
+/*==Footer==*/
+#myFooter {
+    background-color: #3c3d41;
+    color: white;
+    padding-top: 30px;
+}
+
+#myFooter .footer-copyright {
+    background-color: #333333;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    text-align: center;
+}
+
+#myFooter .row {
+    margin-bottom: 60px;
+}
+
+#myFooter .navbar-brand {
+    margin-top: 45px;
+    height: 65px;
+}
+
+#myFooter .footer-copyright p {
+    margin: 10px;
+    color: #ccc;
+}
+
+#myFooter ul {
+    list-style-type: none;
+    padding-left: 0;
+    line-height: 1.7;
+}
+
+#myFooter h5 {
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+    margin-top: 30px;
+}
+
+#myFooter h2 a{
+    font-size: 50px;
+    text-align: center;
+    color: #fff;
+}
+
+#myFooter a {
+    color: #d2d1d1;
+    text-decoration: none;
+}
+
+#myFooter a:hover,
+#myFooter a:focus {
+    text-decoration: none;
+    color: white;
+}
+
+#myFooter .social-networks {
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 16px;
+}
+
+#myFooter .social-networks a {
+    font-size: 32px;
+    color: #f9f9f9;
+    padding: 10px;
+    transition: 0.2s;
+}
+
+#myFooter .social-networks a:hover {
+    text-decoration: none;
+}
+
+#myFooter .facebook:hover {
+    color: #0077e2;
+}
+
+#myFooter .google:hover {
+    color: #ef1a1a;
+}
+
+#myFooter .twitter:hover {
+    color: #00aced;
+}
+
+#myFooter .btn {
+    color: white;
+    background-color: #d84b6b;
+    border-radius: 20px;
+    border: none;
+    width: 150px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 10px;
+    line-height: 25px;
+}
+
+/*AutoComplete*/
+
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+
+@media screen and (max-width: 767px) {
+    #myFooter {
+        text-align: center;
+    }
+}
+
+#myCarousel2 .carousel-caption {
+    left:0;
+	right:0;
+	bottom:0;
+	text-align:left;
+	padding:10px;
+	background:rgba(0,0,0,0.6);
+	text-shadow:none;
+}
+
+#myCarousel2 .list-group {
+	position:absolute;
+	top:0;
+	right:0;
+}
+#myCarousel2 .list-group-item {
+	border-radius:0px;
+	cursor:pointer;
+    color:black;
+}
+#myCarousel2 .list-group .active {
+	background-color:#eee;	
+}
+.img-slider{
+    width: 760px !important;
+    height: 400px !important;
+}
+@media (min-width: 992px) { 
+	#myCarousel2 {padding-right:33.3333%;}
+	#myCarousel2 .carousel-controls {display:none;} 	
+}
+@media (max-width: 991px) { 
+	.carousel-caption p,
+	#myCarousel2 .list-group {display:none;} 
+}
+@media (max-width: 992px) { 
+	.img-qc {width: 100%} 	
+}
+
+/*blockquote*/
+/* carousel */
+#quote-carousel 
+{
+  padding: 0 10px 30px 10px;
+  margin-top: 30px;
+}
+
+/* Control buttons  */
+#quote-carousel .carousel-control
+{
+  background: none;
+  color: #222;
+  font-size: 2.3em;
+  text-shadow: none;
+  margin-top: 30px;
+}
+/* Previous button  */
+#quote-carousel .carousel-control.left 
+{
+  left: -12px;
+}
+/* Next button  */
+#quote-carousel .carousel-control.right 
+{
+  right: -12px !important;
+}
+/* Changes the position of the indicators */
+#quote-carousel .carousel-indicators 
+{
+  right: 50%;
+  top: auto;
+  bottom: 0px;
+  margin-right: -19px;
+}
+/* Changes the color of the indicators */
+#quote-carousel .carousel-indicators li 
+{
+  background: #c0c0c0;
+}
+#quote-carousel .carousel-indicators .active 
+{
+  background: #333333;
+}
+#quote-carousel img
+{
+  width: 250px;
+  height: 100px
+}
+/* End carousel */
+
+.item blockquote {
+    border-left: none; 
+    margin: 0;
+}
+
+.item blockquote img {
+    margin-bottom: 10px;
+}
+
+.item blockquote p:before {
+    content: "\f10d";
+    font-family: 'Fontawesome';
+    float: left;
+    margin-right: 10px;
+}
+
+
+.btn-call-now {
+    display: flex;
+    align-items: center;
+    width: 170px;
+    bottom: 20px;
+    background: rgba(183, 1, 0, 0.74);
+    -webkit-box-shadow: 0 0 5px #ddd;
+    -moz-box-shadow: 0 0 5px #ddd;
+    box-shadow: 0 0 5px #ddd;
+    z-index: 99;
+    left: 20px;
+    top: initial !important;
+    color: #FFF;
+    font-weight: 700;
+    font-size: 125%;
+    border-radius: 25px;
+    padding: 5px;
+}
+.blink_me {
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% {
+    opacity: 0;
+    }
+}
+
+/**
+  MEDIA QUERIES
+*/
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) { 
+    #quote-carousel 
+    {
+      margin-bottom: 0;
+      padding: 0 40px 30px 40px;
+     
+    }
+
+}
+
+/* Small devices (tablets, up to 768px) */
+@media (max-width: 768px) { 
+    
+    /* Make the indicators larger for easier clicking with fingers/thumb on mobile */
+    #txtKey{width:79%;}
+    #quote-carousel .carousel-indicators {
+        bottom: -20px !important;  
+    }
+    #quote-carousel .carousel-indicators li {
+        display: inline-block;
+        margin: 0px 5px;
+        width: 15px;
+        height: 15px;
+    }
+    #quote-carousel .carousel-indicators li.active {
+        margin: 0px 5px;
+        width: 20px;
+        height: 20px;
+    }
+    .img-topbanner {
+        /*width : 100% !important;*/
+    }
+    img {
+            /*width : 100% !important;
+            height : 100% !important;*/
+        }
+    h4 {
+        text-align:center;
+    }
+    .container {
+		width: 100%;
+	}
+}

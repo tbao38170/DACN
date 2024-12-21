@@ -1,0 +1,216 @@
+﻿@using WebApplication1.Models;
+@model WebApplication1.ViewModels.ArticleManagement;
+@*@model (List<Song> songs, List<Author> authors, List<SongSinger> songSingers, List<Singer> singers, List<Category> categories, List<SongCategory> songCategories, List<Chord> chords)*@
+@{
+    ViewBag.Title = "QuanLiBaiViet";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    int songCount = 1;
+}
+
+@section css{
+        <link href="~/Content/Admin-style/sweetalert-master/lib/sweet-alert.css" rel="stylesheet" />
+        <link href="~/Content/dataTable/datatables.min.css" rel="stylesheet" />
+}
+
+@section js{
+        <script src="~/Content/Admin-style/sweetalert-master/lib/sweet-alert.min.js"></script>
+        <script src="~/Content/dataTable/datatables.min.js"></script>
+        <script>
+            $('a[data-del-proid]').click(function () {
+                var id = $(this).attr("data-del-proid");
+                $.ajax({
+                    type: 'POST',
+                    url: '/Admin/Xoa',
+                    contentType: 'application/json; charset=utf-8',
+                    data: '{id: ' + id + '}',
+                    dataType: 'json',
+                    success: function (status) {
+                        if (status == true) {
+                            swal("Thông báo!", "Bài viết sẽ xóa sau 3s !", "success");
+                            setTimeout(function () { location.reload(); }, 3000);
+                        }
+                        else {
+                            swal("Lỗi!", "Không xóa được!", "error");
+                        }
+                        //location.reload();
+                    },
+                    error: function (xhr, status) {
+                        swal("Lỗi!", "Không xóa được!", "error");
+                    }
+                })
+            });
+
+            $(function () {
+                $('#tbl_Detail').DataTable({
+                    "oSearch": { "bSmart": false, "bRegex": true, "sSearch": "" },
+                    "searching": true,
+                    "bLengthChange": false,
+                    "bInfo": false,
+                    "pageLength": 10,
+                    "scrollCollapse": true,
+                    "paginate": true,
+                    "ordering": true,
+                    "columnDefs": [
+                        { "width": "auto", "targets": [0, 1, 2, 3, 4, 5, 6, 7, 8] },
+                    ]
+                });
+            });
+
+            // Search functionality
+            $('#searchInput').on('keyup', function () {
+                var searchText = $(this).val().toLowerCase();
+                $('#tbl_Detail tbody tr').each(function () {
+                    var rowData = $(this).text().toLowerCase();
+                    if (rowData.indexOf(searchText) == -1) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            });
+        </script>
+}
+
+<h2 style="color:darkred">Quản Lí Hợp Âm</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <a asp-controller="Admin" asp-action="VietBaiMoi" role="button" class="btn btn-default">
+            <i class="fa fa-plus"></i>&nbsp;Thêm Hợp Âm
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table id="tbl_Detail" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Mã</th>
+                    <th>Tên bài hát</th>
+                    <th>Ca sĩ</th>
+                    <th>Sáng tác</th>
+                    <th>Thể loại</th>
+                    <th>Giai điệu</th>
+                    <th>Active</th>
+                    <th>Xóa</th>
+                    <th>Sửa</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var song in Model.Songs)
+                {
+                    <tr>
+                        <td>@(songCount++)</td>
+                            <td>@song.Name</td>
+                            <td>
+                            @foreach (var song_singer in Model.SongSingers)
+                            {
+                                if (song.Id == song_singer.IdSong)
+                                {
+                                    foreach (var singer in Model.Singers)
+                                    {
+                                        if (singer.Id == song_singer.IdSinger)
+                                        {
+                                            @singer.Name;
+                                        }
+                                    }
+                                }
+                            }
+                            </td>
+                            <td>
+                            @foreach (var song_author in Model.SongAuthors)
+                            {
+                                if (song.Id == song_author.IdSong)
+                                {
+                                    foreach (var author in Model.Authors)
+                                    {
+                                        if (author.Id == song_author.IdAuthor)
+                                        {
+                                            @author.AuthorName;
+                                        }
+                                    }
+                                }
+                            }
+                            </td>
+                            <td>
+                            @foreach (var song_category in Model.SongCategories)
+                            {
+                                if (song.Id == song_category.IdSong)
+                                {
+                                    foreach (var category in Model.Categories)
+                                    {
+                                        if (category.Id == song_category.IdCategory)
+                                        {
+                                            @category.Name
+                                            ;
+                                        }
+                                    }
+                                }
+                            }
+                            </td>
+                            <td>
+                            @foreach (var song_chord in Model.SongChords)
+                            {
+                                if (song.Id == song_chord.IdSong)
+                                {
+                                    foreach (var chord in Model.Chords)
+                                    {
+                                        if (chord.Id == song_chord.IdChord)
+                                        {
+                                            @chord.Name;
+                                        }
+                                    }
+                                }
+                            }
+                            </td>
+                            <td>
+                                <form method="post" action="@Url.Action("ChangeIsActive", "Admin", new { ID = song.Id })">
+                                @if (song.Activity == true)
+                                {
+                                            <button type="submit" class="btn btn-success">Kích hoạt</button>
+                                }
+                                else
+                                {
+                                            <button type="submit" class="btn btn-danger">Chưa kích hoạt</button>
+                                }
+                                </form>
+                            </td>
+                            <td>
+                                <a class="btn btn-default btn-xs" href="@Url.Action("DeleteSong", "Admin", new { id = song.Id })">
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("SuaBaiViet", "Admin", new { id = song.Id })" class="btn btn-default btn-xs">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            </td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <form method="post" action="@Url.Action(" ThemLienQuan","Admin")">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control hidden" name="Ma" id="Ma" placeholder="Nhập các mã bài viết liên quan phân cách nhau bởi dấu phẩy">
+                    <input type="text" class="form-control" name="LienQuan" placeholder="Nhập các mã bài viết liên quan phân cách nhau bởi dấu phẩy">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="addLienQuan" class="btn btn-success">Thêm</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

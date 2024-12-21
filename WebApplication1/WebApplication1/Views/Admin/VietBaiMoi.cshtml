@@ -1,0 +1,113 @@
+﻿@{
+    ViewBag.Title = "Viết hợp âm mới";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section js{
+    @*vung soan thao*@
+    <script src="~/Content/ckeditor/ckeditor.js"></script>
+    <script src="~/Content/ckfinder/ckfinder.js"></script>
+
+    <script>
+    // cấu hình ckeditor cho textarea nhập liệu
+        CKEDITOR.replace("txtNoiDungHopAm");
+        function BrowseServer() {
+            var finder = new CKFinder();
+            finder.selectActionFunction = SetFileField;
+            finder.popup();
+        }
+    </script>
+}
+<style>
+    /*AutoComplete*/
+    .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+    .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+    .autocomplete-selected { background: #F0F0F0; }
+    .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+    .autocomplete-group { padding: 2px 5px; }
+    .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+</style>
+<script src="~/Content/autocomplete/autocomplete.js"></script>
+
+<h3>Viết Hợp Âm Mới</h3>
+<form class="form-horizontal" method="post" asp-action="VietBaiMoi" id="AddForm" enctype="multipart/form-data">
+
+    <div class="form-group">
+        <label for="TenHopAm" class="col-sm-2 control-label">Tên hợp âm</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="TenHopAm" name="Name" required placeholder="nhập tên hợp âm" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Ca sĩ</label>
+        <div class="col-sm-4">
+<input class="form-control" id="txtCaSi" name="Singer" type="text" autocomplete="off" required placeholder="nhập tên ca sĩ">
+        </div>
+
+        <label class="col-sm-2 control-label">Sáng Tác</label>
+        <div class="col-sm-4">
+            <input class="form-control" id="txtSangTac" name="Author" type="text" autocomplete="off" required placeholder="nhập người sáng tác">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Tông</label>
+        <div class="col-sm-4">
+            <input class="form-control" id="txtTone" name="Chord" type="text" autocomplete="off" required placeholder="nhập tông hợp âm">
+        </div>
+        <label class="col-sm-2 control-label">Thể Loại</label>
+        <div class="col-sm-4">
+            <input class="form-control" id="txtTheLoai" name="Category" type="text" autocomplete="off" required placeholder="nhập thể loại hợp âm">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Youtube</label>
+        <div class="col-sm-4">
+            <input class="form-control" id="txtYoutube" name="Youtube" type="text" autocomplete="off" required placeholder="Nhập link youtube nếu có">
+        </div>
+    </div>
+    @*Vùng soạn thảo Nội Dung*@
+    <label class="col-sm-4 control-label">Lời và hợp âm (Hợp âm phải bỏ trong dấu ngoặc vuông {}).</label>
+    <div class="form-group">
+        <div class="col-sm-10 col-sm-offset-2">
+            <textarea class="form-control" id="txtNoiDungHopAm" name="Content"></textarea>
+        </div>
+    </div>
+
+   @* <div class="form-group">
+        <label for="txtTinyDes" class="col-sm-2 control-label">Thẻ Tag</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtTag" name="Tag" placeholder="Thẻ tag phân cách nhau bằng dấu phẩy" />
+        </div>
+    </div>*@
+
+    <div class="form-group">
+        <div class="col-sm-10 col-sm-offset-2">
+            <button type="submit" class="btn btn-info" id="btnXuatBan">
+                <i class="fa fa-check"></i>&nbsp;Xuất Bản & Đợi Duyệt
+            </button>
+            <a href="@Url.Action("QuanLiBaiViet","Admin")" class="btn btn-success">
+                <i class="fa fa-reply"></i>&nbsp;Quay Lại
+            </a>
+        </div>
+    </div>
+</form>
+<script>
+    $('#txtCaSi, #txtSangTac').autocomplete({
+        minChars: 1,
+        serviceUrl: '/Public/AutoCompleteNgheSi',
+    });
+
+    $('#txtTone').autocomplete({
+        minChars: 1,
+        serviceUrl: '/Public/AutoCompleteTone',
+    });
+
+    $('#txtTheLoai').autocomplete({
+        minChars: 1,
+        serviceUrl: '/Public/AutoCompleteTheLoai',
+    });
+
+</script>

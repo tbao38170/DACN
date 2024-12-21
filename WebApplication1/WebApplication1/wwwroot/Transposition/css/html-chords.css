@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap');
+div.song > p {
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 1px 0px 1px 0px;
+    font-family: 'Roboto Flex', cyrillic-ext;
+}
+span.chord { /*position:absolute;*/line-height: 0;font-weight: bold;color: #f44333;}
+span.chord-inline {font-weight:bold;color: #f44333;}
+div.transposition a.transposition {margin:5px;}
+div.song div.transposition {margin-bottom:20px;}
