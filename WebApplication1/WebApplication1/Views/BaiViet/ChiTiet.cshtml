@@ -1,0 +1,466 @@
+﻿@model WebApplication1.ViewModels.SongDetailViewModel
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = Model.Song.Name;
+}
+
+<style>
+    /* Your existing CSS styles here */
+
+    .Table {
+        margin: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .btn-info {
+        margin-bottom: 5px;
+    }
+
+    .song > p {
+        font-size: 15px;
+        line-height: 1.5;
+        margin: 1px 0px 1px 0px;
+        font-family: 'Roboto Flex', cyrillic-ext;
+    }
+
+    span.chord {
+        line-height: 0;
+        font-weight: bold;
+        color: #f44333;
+    }
+
+    span.chord-inline {
+        font-weight: bold;
+        color: #f44333;
+    }
+
+    div.transposition a.transposition {
+        margin: 5px;
+    }
+
+    div.song div.transposition {
+        margin-bottom: 20px;
+    }
+
+    .related-content {
+        margin-top: 47px;
+    }
+
+        .related-content .main-title {
+            margin-bottom: 20px;
+        }
+
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        gap: 20px;
+    }
+
+    .chord {
+        position: relative;
+    }
+
+        .chord h2 {
+            position: relative;
+            top: 0px;
+            left: 60%;
+            transform: translateX(-50%);
+            background-color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 1;
+            margin-bottom: 30px;
+        }
+
+    h2,
+    .h2 {
+        width: 100px;
+    }
+
+    svg {
+        width: 200px;
+        height: auto;
+        margin-bottom: 20px;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    #lyrics {
+        margin-top: 20px;
+        font-size: 18px;
+        line-height: 1.6;
+    }
+
+    .chord .speaker-icon {
+        cursor: pointer;
+        margin-left: 10px;
+    }
+</style>
+
+@section Meta
+{
+    <meta property="og:url" content="@ViewContext.HttpContext.Request.Path" />
+    <meta property="og:image" content="https://chiasehopam.com/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="@Model.Song.Name" />
+    <link href="~/Content/Admin-style/bower_components/fontawesome-free-6.5.1-web/css/all.min.css" rel="stylesheet" />
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Ensure jQuery is loaded first -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="~/Transposition/js/html-chords.js"></script>
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <h2 style="font-family: Roboto-Regular; color: #f44333; white-space: nowrap;">@Model.Song.Name</h2>
+
+        <span>
+            <i class="fa-solid fa-square-pen"></i> @Model.AuthorName | <i class="fa-solid fa-microphone"></i>
+            @Model.SingerName | <i class="fa-solid fa-arrow-down-short-wide"></i> @Model.CategoryName | <i class="fa-solid fa-music"></i> @Model.ChordName | <i class="fa-solid fa-eye"></i>
+        </span>
+        <br />
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a href="@Url.Action("SuaBaiViet", "Admin", new { id = Model.Song.Id })">Sửa bài viết này</a>
+        }
+        <hr />
+        <div class="song">
+            <div class="transposition" style="display: flex; align-items: center; gap: 10px;">
+                <a href="#" class="transposition">
+                    <strong style="font-size: 19px; border: 1.5px solid #3c78ad; padding: 3px;">b</strong>
+                </a>
+                <span class="chord-inline"
+                      style="display: inline-block; width: 50px; text-align: center; border: 1px solid red; padding: 4px;">
+                    [@Model.ChordName]
+                </span>
+                <a href="#" class="transposition">
+                    <strong style="font-size: 19px; border: 1.5px solid #3c78ad; padding: 3px;">#</strong>
+                </a>
+                <button type="button" class="button" style="padding: 4px;" onclick="decreaseFontSize()">
+                    A <i class="fa-solid fa-arrow-down"></i>
+                </button>
+                <button type="button" class="button" style="padding: 4px;" onclick="increaseFontSize()">
+                    A <i class="fas fa-arrow-up"></i>
+                </button>
+                <form asp-controller="BaiViet" asp-action="GeneratePdf" method="get" style="margin: 0;">
+                    <input type="hidden" id="id" name="id" value="@Model.Song.Id" />
+                    <button type="submit" style="padding: 4px;">Tạo PDF</button>
+                </form>
+            </div>
+
+            <div id="content" style="font-size: 15px; line-height: 1.5;">
+                @if (string.IsNullOrEmpty(Model.Song.Content))
+                {
+                    <text>(Bài viết này chưa có nội dung)</text>
+                }
+                else if (Model.Song.Content.Contains("{"))
+                {
+                    @Html.Raw(Model.Song.Content)
+                }
+                else
+                {
+                    <text>(Bài viết này chỉ có lời chưa có hợp âm)</text>
+                    @Html.Raw(System.Net.WebUtility.HtmlEncode(Model.Song.Content))
+                }
+            </div>
+        </div>
+        <hr />
+        <div class="container">
+            <div class="chord-C">
+                <div class="chord">
+                    <h2>C</h2>
+                    <i class="fas fa-volume-high speaker-icon" alt="Play C chord" onclick="playChord('Cm')"></i>
+                    <audio id="audio-C" src="~/chord-music/C-major-guitar.wav" preload="auto"></audio>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:svgjs="http://svgjs.com/svgjs" preserveAspectRatio="xMidYMid meet"
+                     viewBox="0 0 200 261.41366119384765">
+                    <title>Chord diagram created with chordpic.com</title>
+                    <text x="100" y="2.5" font-family="Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif"
+                          font-size="24" text-anchor="middle" fill="#000000" class="title">
+                        <tspan dy="10.4" x="100"></tspan>
+                    </text>
+                    <line x1="32.8" y1="4.8" x2="47.2" y2="19.2" stroke-width="1" stroke="#000000"></line>
+                    <line x1="32.8" y1="19.2" x2="47.2" y2="4.8" stroke-width="1" stroke="#000000"></line>
+                    <circle r="7.2" cx="112" cy="12" fill="none" stroke-width="1" stroke="#000000"
+                            class="open-string open-string-3"></circle>
+                    <circle r="7.2" cx="160" cy="12" fill="none" stroke-width="1" stroke="#000000"
+                            class="open-string open-string-5"></circle>
+                    <line x1="39.5" y1="26.5" x2="160.5" y2="26.5" stroke-width="5" stroke="#000000"></line>
+                    <line x1="40" y1="71" x2="160" y2="71" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="113" x2="160" y2="113" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="155" x2="160" y2="155" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="197" x2="160" y2="197" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="239" x2="160" y2="239" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="29" x2="40" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="64" y1="29" x2="64" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="88" y1="29" x2="88" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="112" y1="29" x2="112" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="136" y1="29" x2="136" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="160" y1="29" x2="160" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <circle r="7.8" cx="136" cy="50" fill="#000000" stroke-width="0" stroke="#000000"
+                            class="finger finger-string-4 finger-fret-0 finger-string-4-fret-0 finger-circle"></circle>
+                    <circle r="7.8" cx="88" cy="92" fill="#000000" stroke-width="0" stroke="#000000"
+                            class="finger finger-string-2 finger-fret-1 finger-string-2-fret-1 finger-circle"></circle>
+                    <circle r="7.8" cx="64" cy="134" fill="#000000" stroke-width="0" stroke="#000000"
+                            class="finger finger-string-1 finger-fret-2 finger-string-1-fret-2 finger-circle"></circle>
+                </svg>
+            </div>
+
+            <div class="chord-Dm">
+                <div class="chord">
+                    <h2>Dm</h2>
+                    <i class="fas fa-volume-high speaker-icon" alt="Play Dm chord" onclick="playChord('Dm')"></i>
+                    <audio id="audio-Dm" src="~/chord-music/Dm-major-guitar.wav" preload="auto"></audio>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:svgjs="http://svgjs.com/svgjs" preserveAspectRatio="xMidYMid meet"
+                     viewBox="0 0 200 261.41366119384765">
+                    <title>Chord diagram created with chordpic.com</title>
+                    <text x="100" y="2.5" font-family="Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif"
+                          font-size="24" text-anchor="middle" fill="#000000" class="title">
+                        <tspan dy="10.4" x="100"></tspan>
+                    </text>
+                    <line x1="32.8" y1="4.8" x2="47.2" y2="19.2" stroke-width="1" stroke="#000000"></line>
+                    <line x1="32.8" y1="19.2" x2="47.2" y2="4.8" stroke-width="1" stroke="#000000"></line>
+                    <line x1="56.8" y1="4.8" x2="71.2" y2="19.2" stroke-width="1" stroke="#000000"></line>
+                    <line x1="56.8" y1="19.2" x2="71.2" y2="4.8" stroke-width="1" stroke="#000000"></line>
+                    <circle r="7.2" cx="88" cy="12" fill="none" stroke-width="1" stroke="#000000"
+                            class="open-string open-string-2"></circle>
+                    <line x1="39.5" y1="26.5" x2="160.5" y2="26.5" stroke-width="5" stroke="#000000"></line>
+                    <line x1="40" y1="71" x2="160" y2="71" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="113" x2="160" y2="113" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="155" x2="160" y2="155" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="197" x2="160" y2="197" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="239" x2="160" y2="239" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="29" x2="40" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="64" y1="29" x2="64" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="88" y1="29" x2="88" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="112" y1="29" x2="112" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="136" y1="29" x2="136" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="160" y1="29" x2="160" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <circle r="7.8" cx="136" cy="50" fill="#000000" stroke-width="0" stroke="#000000"
+                            class="finger finger-string-4 finger-fret-0 finger-string-4-fret-0 finger-circle"></circle>
+                    <circle r="7.8" cx="160" cy="92" fill="#000000" stroke-width="0" stroke="#000000"
+                            class="finger finger-string-5 finger-fret-1 finger-string-5-fret-1 finger-circle"></circle>
+                    <circle r="7.8" cx="64" cy="134" fill="#000000" stroke-width="0" stroke="#000000"
+                            class="finger finger-string-1 finger-fret-2 finger-string-1-fret-2 finger-circle"></circle>
+                </svg>
+            </div>
+
+            <div class="chord-Em">
+                <div class="chord">
+                    <h2>Em</h2>
+                    <i class="fas fa-volume-high speaker-icon" alt="Play Em chord" onclick="playChord('Em')"></i>
+                    <audio id="audio-Em" src="~/chord-music/Em-major-guitar.wav" preload="auto"></audio>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns:svgjs="http://www.w3.org/2000/svg"
+                     preserveAspectRatio="xMidYMid meet"
+                     viewBox="0 0 200 261.41366119384765">
+                    <title>Chord diagram created with chordpic.com</title>
+                    <text x="100" y="2.5" font-family="Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif"
+                          font-size="24" text-anchor="middle" fill="#000000" class="title">
+                        <tspan dy="10.4" x="100"></tspan>
+                    </text>
+                    <circle r="7.2" cx="40" cy="12" fill="none" stroke-width="1" stroke="#000000"
+                            class="open-string open-string-0"></circle>
+                    <circle r="7.2" cx="64" cy="12" fill="none" stroke-width="1" stroke="#000000"
+                            class="open-string open-string-1"></circle>
+                    <circle r="7.2" cx="88" cy="12" fill="none" stroke-width="1" stroke="#000000"
+                            class="open-string open-string-2"></circle>
+                    <circle r="7.2" cx="112" cy="12" fill="none" stroke-width="1" stroke="#000000"
+                            class="open-string open-string-3"></circle>
+                    <circle r="7.2" cx="160" cy="12" fill="none" stroke-width="1" stroke="#000000"
+                            class="open-string open-string-5"></circle>
+                    <line x1="39.5" y1="26.5" x2="160.5" y2="26.5" stroke-width="5" stroke="#000000"></line>
+                    <line x1="40" y1="71" x2="160" y2="71" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="113" x2="160" y2="113" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="155" x2="160" y2="155" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="197" x2="160" y2="197" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="239" x2="160" y2="239" stroke-width="1" stroke="#000000"></line>
+                    <line x1="40" y1="29" x2="40" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="64" y1="29" x2="64" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="88" y1="29" x2="88" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="112" y1="29" x2="112" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="136" y1="29" x2="136" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <line x1="160" y1="29" x2="160" y2="239.5" stroke-width="1" stroke="#000000"></line>
+                    <circle r="7.8" cx="112" cy="92" fill="#000000" stroke-width="0" stroke="#000000"
+                            class="finger finger-string-3 finger-fret-1 finger-string-3-fret-1 finger-circle"></circle>
+                    <circle r="7.8" cx="136" cy="92" fill="#000000" stroke-width="0" stroke="#000000"
+                            class="finger finger-string-4 finger-fret-1 finger-string-4-fret-1 finger-circle"></circle>
+                </svg>
+            </div>
+        </div>
+<hr />
+        <h4 class="main-title"><span>Hợp Âm Cùng Thể Loại</span></h4>
+        <ul class="list-group">
+            @foreach (var item in ViewBag.CungTheLoai)
+            {
+                <li class="list-group-item list-group-item-action">
+                    <i class="fa-solid fa-hand-point-right"></i>
+                    <a href="~/hop-am/@Model.Song.Url-@Model.Song.Id">
+                        @Model.Song.Name (Sáng tác: @(Model.AuthorName ?? "Chưa cập nhật"), @Model.SingerName)
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="col-md-4">
+        <h4 class="main-title"><span>Video youtube</span></h4>
+        <ul class="list-group">
+            <div class="iframe-wrapper">
+                <div class="container">
+                    <div id="player" ></div>
+                    <div id="lyrics"></div>
+                    <div id="videoId" style="display:none">@Model.Song.Lyrics</div>
+                </div>
+            </div>
+        </ul>
+    </div>
+</div>
+<hr />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="~/Transposition/js/html-chords.js"></script>
+
+<script>
+    function playChord(chordName) {
+        var audioElement = document.getElementById('audio-' + chordName);
+        if (audioElement) {
+            audioElement.play();
+        }
+    }
+
+    let player;
+    const lyrics = [
+        { time: 29, text: "Em là ai từ đâu bước đến nơi đây dịu dàng chân phương" },
+        { time: 35, text: "Em là ai tựa như ánh nắng ban mai ngọt ngào trong sương" },
+        { time: 39, text: "Ngắm em thật lâu" },
+        { time: 43, text: "con tim anh yếu mềm" },
+        { time: 45, text: "Đắm say từ phút đó" },
+        { time: 47, text: "từng giây trôi yêu thêm!" },
+        { time: 50, text: "Bao ngày qua bình minh đánh thức xua tan bộn bề nơi anh" },
+        { time: 55, text: "Bao ngày qua niềm thương nỗi nhớ bay theo bầu trời trong xanh" },
+        { time: 61, text: "Liếc đôi hàng mi mong manh anh thẫn thờ" },
+        { time: 65, text: "Muốn hôn nhẹ mái tóc bờ môi em anh mơ!!!" },
+        { time: 71, text: "Cầm tay anh dựa vai anh kề bên anh nơi này có anh" },
+        { time: 76, text: "Gió mang câu tình ca" },
+        { time: 77, text: "Ngàn ánh sao vụt qua" },
+        { time: 79, text: "Nhẹ ôm lấy em (Yêu em thương em con tim anh chân thành)" },
+        { time: 82, text: "Cầm tay anh dựa vai anh kề bên anh nơi này có anh" },
+        { time: 86, text: "Khép đôi mi thật lâu" },
+        { time: 88, text: "Nguyện mãi bên cạnh nhau" },
+        { time: 89, text: "Yêu say đắm như ngày đầu!" },
+        { time: 91, text: "Mùa xuân đến bình yên cho anh những giấc mơ" },
+        { time: 97, text: "Hạ lưu giữ ngày mưa ngọt ngào nên thơ" },
+        { time: 102, text: "Mùa thu lá vàng rơi đông sang anh nhớ em" },
+        { time: 107, text: "Tình yêu bé nhỏ xin dành tặng riêng em!" },
+        { time: 124, text: "Còn đó tiếng nói ấy bên tai vấn vương bao ngày qua" },
+        { time: 126, text: "Ánh mắt bối rối nhớ thương bao ngày qua" },
+        { time: 129, text: "Yêu em anh thẫn thờ" },
+        { time: 130, text: "Con tim bâng khuâng đâu có ngờ" },
+        { time: 132, text: "Chẳng bao giờ phải mong chờ" },
+        { time: 133, text: "Đợi ai trong chiều hoàng hôn mờ" },
+        { time: 134, text: "Đắm chìm hoà vào vần thơ" },
+        { time: 136, text: "Ngắm nhìn khờ dại mộng mơ" },
+        { time: 137, text: "Đừng bước vội vàng rồi làm ngơ" },
+        { time: 138, text: "Lạnh lùng đó làm bộ dạng thờ ơ" },
+        { time: 139, text: "Nhìn anh đi em nha" },
+        { time: 140, text: "Hướng nụ cười cho riêng anh nha" },
+        { time: 142, text: "Đơn giản là yêu con tim anh lên tiếng thôi!" },
+        { time: 144, text: "Cầm tay anh dựa vai anh kề bên anh nơi này có anh" },
+        { time: 149, text: "Gió mang câu tình ca" },
+        { time: 150, text: "Ngàn ánh sao vụt qua" },
+        { time: 152, text: "Nhẹ ôm lấy em (Yêu em thương em con tim anh chân thành)" },
+        { time: 155, text: "Cầm tay anh dựa vai anh kề bên anh nơi này có anh" },
+        { time: 159, text: "Khép đôi mi thật lâu" },
+        { time: 161, text: "Nguyện mãi bên cạnh nhau" },
+        { time: 162, text: "Yêu say đắm như ngày đầu!" },
+        { time: 165, text: "Mùa xuân đến bình yên cho anh những giấc mơ" },
+        { time: 170, text: "Hạ lưu giữ ngày mưa ngọt ngào nên thơ" },
+        { time: 175, text: "Mùa thu lá vàng rơi đông sang anh nhớ em" },
+        { time: 180, text: "Tình yêu bé nhỏ xin dành tặng riêng em!" },
+        { time: 186, text: "Uhhhhhhhh... Nhớ thương em" },
+        { time: 191, text: "Uhhhhhhhh ... Nhớ thương em lắm" },
+        { time: 196, text: "Ahhhhhhh Phía sau chân trời" },
+        { time: 201, text: "có ai băng qua lối về cùng em đi trên đoạn đường dài" },
+        { time: 207, text: "Cầm tay anh dựa vai anh kề bên anh nơi này có anh" },
+        { time: 211, text: "Gió mang câu tình ca" },
+        { time: 213, text: "Ngàn ánh sao vụt qua" },
+        { time: 214, text: "Nhẹ ôm lấy em (Yêu em thương em con tim anh chân thành)" },
+        { time: 217, text: "Cầm tay anh dựa vai anh kề bên anh nơi này có anh" },
+        { time: 222, text: "Khép đôi mi thật lâu" },
+        { time: 223, text: "Nguyện mãi bên cạnh nhau" },
+        { time: 225, text: "Yêu say đắm như ngày đầu!" },
+        { time: 227, text: "Mùa xuân đến bình yên cho anh những giấc mơ" },
+        { time: 232, text: "Hạ lưu giữ ngày mưa ngọt ngào nên thơ" },
+        { time: 238, text: "Mùa thu lá vàng rơi đông sang anh nhớ em" },
+        { time: 243, text: "Tình yêu bé nhỏ xin dành tặng riêng em!" },
+    ];
+
+    function onYouTubeIframeAPIReady() {
+        var videoIdElement = document.getElementById('videoId');
+        var videoId = videoIdElement.innerText; // Lấy giá trị của phần tử có id "videoId"
+
+        player = new YT.Player('player', {
+            height: '315',
+            width: '560',
+            videoId: videoId, // Truyền giá trị vào thuộc tính videoId
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        event.target.playVideo();
+    }
+
+    function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING) {
+            console.log('Player state changed to PLAYING');
+            setInterval(displayLyrics, 1000);
+        }
+    }
+
+    function displayLyrics() {
+        const currentTime = Math.floor(player.getCurrentTime());
+        const lyricsContainer = document.getElementById("lyrics");
+        if (lyricsContainer) {
+            lyricsContainer.innerHTML = "";
+
+            for (let i = 0; i < lyrics.length; i++) {
+                if (currentTime >= lyrics[i].time && currentTime < (lyrics[i + 1] ? lyrics[i + 1].time : Infinity)) {
+                    lyricsContainer.innerHTML = lyrics[i].text;
+                    break;
+                }
+            }
+        }
+    }
+
+    function increaseFontSize() {
+        const content = document.getElementById('content');
+        const currentFontSize = window.getComputedStyle(content, null).getPropertyValue('font-size');
+        const newFontSize = parseFloat(currentFontSize) + 1;
+        content.style.fontSize = newFontSize + 'px';
+    }
+
+    function decreaseFontSize() {
+        const content = document.getElementById('content');
+        const currentFontSize = window.getComputedStyle(content, null).getPropertyValue('font-size');
+        const newFontSize = parseFloat(currentFontSize) - 1;
+        content.style.fontSize = newFontSize + 'px';
+    }
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>

@@ -1,0 +1,36 @@
+﻿@using WebApplication1.Models
+@{
+    ViewData["Title"] = "Tìm kiếm";
+}
+
+<div>
+    <div class="row">
+        <h4 class="main-title">
+            <span>
+                CÁC HỢP ÂM TÌM KIẾM THEO TỪ KHÓA "@ViewBag.key.ToUpper()" CÓ @ViewBag.sl
+            </span>
+        </h4>
+        @foreach (var item in Model)
+        {
+                <div class="col-sm-6 col-md-4">
+                    <div class="thumbnail img-lienket" style="border: 0px !important">
+                        <a href="~/hop-am/@item.Url-@item.ID"><img src="#" style="width:360px; height:200px;" alt="@item.TenHopAm"></a>
+                        <div class="caption" style="height:70px">
+                            <h4 style="height: 100%; border-bottom: 1px solid rgba(0,0,0,.05);">
+                                <a href="~/hop-am/@item.Url-@item.ID">
+                                @if (item.Name.Length < 70)
+                                {
+                                    @item.TenHopAm
+                                }
+                                else
+                                {
+                                    @item.TenHopAm.Substring(0, 70)
+                                }
+                                </a>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+        }
+    </div>
+</div>

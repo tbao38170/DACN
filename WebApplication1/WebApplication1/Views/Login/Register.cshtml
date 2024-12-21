@@ -1,0 +1,275 @@
+﻿@{
+    ViewBag.Title = "Login Admin";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        .card-body{
+            padding:0px;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .card-container {
+            display: flex;
+            width: 80%;
+            max-width: 900px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.85);
+            height: 650px;
+        }
+
+            .card-container img {
+                width: 50%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .form-container {
+            width: 50%;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .form-outline {
+            position: relative;
+            width: 100%;
+            margin-bottom: 0.3rem; /* Reduced margin-bottom */
+        }
+
+            .form-outline input {
+                padding-left: 2.375rem;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                width: 100%;
+                height: calc(1.5em + 0.75rem + 2px);
+            }
+
+            .form-outline i {
+                position: absolute;
+                left: 0.75rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #6c757d;
+            }
+
+        .btn-floating {
+            font-size: 1.5rem;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+            }
+
+        .form-check-label {
+            font-size: 0.9rem;
+        }
+
+        .text-center p {
+            font-size: 1rem;
+        }
+
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+            position: relative;
+        }
+
+            .custom-checkbox input[type="checkbox"] {
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                width: 20px;
+                height: 20px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                cursor: pointer;
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                margin: 0;
+            }
+
+                .custom-checkbox input[type="checkbox"]:checked {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                }
+
+                    .custom-checkbox input[type="checkbox"]:checked::after {
+                        content: '\2713';
+                        font-size: 12px;
+                        color: white;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                    }
+
+            .custom-checkbox label {
+                margin-left: 30px;
+            }
+
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            justify-content: space-between;
+        }
+
+        .form-container .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .form-container .text-center {
+            margin-top: auto;
+        }
+
+        .mb-3, .my-3 {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .alert {
+            margin-bottom: 0.3rem; /* Reduced margin-bottom */
+        }
+
+        .text-center h2 {
+            margin-bottom: 0.3rem; /* Reduced margin-bottom */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card-container">
+            <img src="~/img/a.png" alt="Background Image">
+            <div class="form-container">
+                <div class="card-body">
+                    <form action="@Url.Action("Register", "Login")" id="registerForm" method="post">
+                        <div class="text-center mb-3">
+                            <h2>Register</h2>
+                        </div>
+
+                        <!-- Display error or success messages -->
+                        @if (TempData["ErrMess"] != null)
+                        {
+                            <div class="alert alert-danger">
+                                @TempData["ErrMess"]
+                            </div>
+                        }
+                        @if (TempData["SuccessMess"] != null)
+                        {
+                            <div class="alert alert-success">
+                                @TempData["SuccessMess"]
+                            </div>
+                        }
+
+                        <!-- Name input -->
+                        <div class="form-outline mb-3">
+                            <input type="text" id="registerName" class="form-control" name="Name" required />
+                            <label class="form-label" for="registerName"><i class="fas fa-user-tag"></i> Name</label>
+                        </div>
+
+                        <!-- Phone input -->
+                        <div class="form-outline mb-3">
+                            <input type="text" id="registerPhone" class="form-control" name="Phone" required />
+                            <label class="form-label" for="registerPhone"><i class="fas fa-phone"></i> Phone</label>
+                        </div>
+
+                        <!-- Username input -->
+                        <div class="form-outline mb-3">
+                            <input type="text" id="registerUsername" class="form-control" name="Username" required />
+                            <label class="form-label" for="registerUsername"><i class="fas fa-user-tag"></i> Username</label>
+                        </div>
+
+                        <!-- Email input -->
+                        <div class="form-outline mb-3">
+                            <input type="email" id="registerEmail" class="form-control" name="Email" required />
+                            <label class="form-label" for="registerEmail"><i class="fas fa-envelope"></i> Email</label>
+                        </div>
+
+                        <!-- Password input -->
+                        <div class="form-outline mb-3">
+                            <input type="password" id="registerPassword" class="form-control" name="Password" required />
+                            <label class="form-label" for="registerPassword"><i class="fas fa-lock"></i> Password</label>
+                        </div>
+
+                        <!-- Repeat Password input -->
+                        <div class="form-outline mb-3">
+                            <input type="password" id="registerRepeatPassword" class="form-control" name="ConfirmPassword" required />
+                            <label class="form-label" for="registerRepeatPassword"><i class="fas fa-lock"></i> Confirm Password</label>
+                        </div>
+
+                        <!-- Checkbox -->
+                        <div class="custom-checkbox">
+                            <div class="form-check mb-3 mb-md-0">
+                                <input class="form-check-input" type="checkbox" value="" id="showPasswordCheckbox">
+                                <label class="form-check-label" for="showPasswordCheckbox"> Show password </label>
+                            </div>
+                        </div>
+
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-primary btn-block mb-3">Sign Up</button>
+
+                        <!-- Login buttons -->
+                        <div class="text-center">
+                            <p>Already have an account? <a href="@Url.Action("Index", "Login" )">Login here</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function togglePassword() {
+                const passwordInput = document.getElementById('registerPassword');
+                const confirmPasswordInput = document.getElementById('registerRepeatPassword');
+                const showPasswordCheckbox = document.getElementById('showPasswordCheckbox');
+                const type = showPasswordCheckbox.checked ? 'text' : 'password';
+                passwordInput.type = type;
+                confirmPasswordInput.type = type;
+            }
+
+            document.getElementById('showPasswordCheckbox').addEventListener('change', togglePassword);
+        });
+    </script>
+</body>
+</html>
