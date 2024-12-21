@@ -1,0 +1,439 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chord Manager</title>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x:hidden;
+        }
+
+        .chord-svg {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+        }
+
+        .svg-wrapper {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 20px;
+            max-width: 90vw;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .svg-container, .png-container {
+            min-width: 200px;
+            text-align: center;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+        }
+
+            .svg-container h2, .png-container h2 {
+                font-size: 24px;
+                margin: 10px 0;
+            }
+
+        .chord .speaker-icon {
+            cursor: pointer;
+            margin-left: 10px;
+            color: black;
+            transition: color 0.2s ease;
+        }
+
+            .chord .speaker-icon:hover {
+                color: blue;
+            }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            color: #333;
+        }
+
+        .svg-container.slide-in, .png-container.slide-in {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .chord-desc {
+            font-size: 14px;
+            color: #555;
+            margin-top: 10px;
+            display: none;
+            text-align: left;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .show-desc {
+            display: block;
+        }
+
+        .toggle-btn {
+            margin-top: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+            .toggle-btn:hover {
+                background-color: #0056b3;
+            }
+}
+
+.svg-container, .png-container {
+    min-width: 200px;
+    text-align: center;
+    animation: slide 20s linear infinite; /* Hiệu ứng chuyển động ngang */
+}
+    </style>
+</head>
+
+<body>
+    <div class="section">
+            <h1>Hợp âm trưởng Guitar</h1>
+            <div class="svg-wrapper">
+                <div class="svg-container">
+                    <div class="chord">
+                        <h2>C</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('C')"></i>
+                        <audio id="audio-C" src="/chord-music/C-major-guitar.wav" preload="auto"></audio>
+                    </div>
+                    <object type="image/svg+xml" data="/Data/C.svg" class="chord-svg"></object>
+                <button class="toggle-btn" onclick="toggleDescription(this)">Xem cách đặt tay</button>
+                <p class="chord-desc">
+                    Hợp âm C trưởng: Đặt ngón tay trỏ ở dây 2, ngăn 1. Ngón tay giữa ở dây 4, ngăn 2. Ngón tay áp út ở dây 5, ngăn 3.
+                </p>
+                </div>
+                <div class="svg-container">
+                    <div class="chord">
+                        <h2>D</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('D')"></i>
+                        <audio id="audio-D" src="/chord-music/D-major-guitar.wav" preload="auto"></audio>
+                    </div>
+                    <object type="image/svg+xml" data="/Data/D.svg" class="chord-svg"></object>
+                <button class="toggle-btn" onclick="toggleDescription(this)">Xem cách đặt tay</button>
+                <p class="chord-desc">
+                    Hợp âm D trưởng: Đặt ngón tay trỏ ở dây 3, ngăn 2. Ngón tay giữa ở dây 1, ngăn 2. Ngón tay áp út ở dây 2, ngăn 3.
+                </p>
+                </div>
+                <div class="svg-container">
+                    <div class="chord">
+                        <h2>E</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('E')"></i>
+                        <audio id="audio-E" src="/chord-music/E-major-guitar.wav" preload="auto"></audio>
+                    </div>
+                    <object type="image/svg+xml" data="/Data/E.svg" class="chord-svg"></object>
+                <button class="toggle-btn" onclick="toggleDescription(this)">Xem cách đặt tay</button>
+                <p class="chord-desc">
+                    Hợp âm E trưởng: Đặt ngón tay trỏ ở dây 3, ngăn 1. Ngón tay giữa ở dây 5, ngăn 2. Ngón tay áp út ở dây 4, ngăn 2.
+                </p>
+                </div>
+                <div class="svg-container">
+                <div class="chord" style="margin-top: 25px;">
+                    <h2>F</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('F')"></i>
+                        <audio id="audio-F" src="/chord-music/F-major-guitar.wav" preload="auto"></audio>
+                    </div>
+                    <object type="image/svg+xml" data="/Data/F.svg" class="chord-svg"></object>
+                <button class="toggle-btn" onclick="toggleDescription(this)" style="margin-top:15px">Xem cách đặt tay</button>
+                <p class="chord-desc">
+                    Hợp âm F trưởng: Đặt ngón tay trỏ bấm toàn bộ ngăn 1, các ngón còn lại bấm dây 2 (ngăn 1), dây 3 (ngăn 2), dây 4 (ngăn 3), dây 5 (ngăn 3).
+                </p>
+                </div>
+                <div class="svg-container">
+                    <div class="chord">
+                        <h2>G</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('G')"></i>
+                        <audio id="audio-G" src="/chord-music/G-major-guitar.wav" preload="auto"></audio>
+                    </div>
+                    <object type="image/svg+xml" data="/Data/G.svg" class="chord-svg"></object>
+                <button class="toggle-btn" onclick="toggleDescription(this)">Xem cách đặt tay</button>
+                <p class="chord-desc">
+                    Hợp âm G trưởng Đặt ngón tay trỏ ở dây 5, ngăn 2. Ngón tay giữa ở dây 6, ngăn 3. Ngón tay út ở dây 1, ngăn 3.
+                </p>
+                </div>
+                <div class="svg-container">
+                    <div class="chord">
+                        <h2>A</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('A')"></i>
+                        <audio id="audio-A" src="/chord-music/A-major-guitar.wav" preload="auto"></audio>
+                    </div>
+                    <object type="image/svg+xml" data="/Data/A.svg" class="chord-svg"></object>
+                <button class="toggle-btn" onclick="toggleDescription(this)">Xem cách đặt tay</button>
+                <p class="chord-desc">
+                    Hợp âm Am:Đặt ngón tay trỏ ở dây 2, ngăn 1. Ngón tay giữa ở dây 4, ngăn 2. Ngón tay áp út ở dây 3, ngăn 2.
+                </p>
+                </div>
+                <div class="svg-container">
+                    <div class="chord">
+                        <h2>B</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('B')"></i>
+                        <audio id="audio-B" src="/chord-music/B-major-guitar.wav" preload="auto"></audio>
+                    </div>
+                    <object type="image/svg+xml" data="/Data/B.svg" class="chord-svg"></object>
+                <button class="toggle-btn" onclick="toggleDescription(this)">Xem cách đặt tay</button>
+                <p class="chord-desc">
+                    Hợp âm Bm: Đặt ngón tay trỏ bấm toàn bộ ngăn 2, ngón tay giữa ở dây 2, ngăn 3. Ngón tay áp út ở dây 4, ngăn 4. Ngón tay út ở dây 3, ngăn 4.
+                </p>
+                </div>
+            </div>
+     </div>
+
+        <div class="section">
+            <h1>Hợp âm thứ Guitar</h1>
+            <div class="svg-wrapper">
+                <div class="svg-container">
+                    <div class="chord">
+                        <h2>Am</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('m')"></i>
+                        <audio id="audio-Am" src="/chord-music/Am-major-guitar.wav" preload="auto"></audio>
+                    </div>
+                <object type="image/svg+xml" data="/Data/Am.svg" class="chord-svg"></object>
+                <button class="toggle-btn" onclick="toggleDescription(this)">Xem cách đặt tay</button>
+                <p class="chord-desc">
+                    Hợp âm Am: Đặt ngón tay trỏ ở dây 2, ngăn 1. Ngón tay giữa ở dây 4, ngăn 2. Ngón tay áp út ở dây 3, ngăn 2.
+                </p>
+                </div>
+            <div class="svg-container">
+                <div class="chord">
+                    <h2>Bm</h2>
+                    <i class="fas fa-volume-high speaker-icon" onclick="playChord('Bm')"></i>
+                    <audio id="audio-Bm" src="/chord-music/Bm-major-guitar.wav" preload="auto"></audio>
+                </div>
+                <object type="image/svg+xml" data="/Data/Bm.svg" class="chord-svg"></object>
+                <button class="toggle-btn" onclick="toggleDescription(this)">Xem cách đặt tay</button>
+                <p class="chord-desc">
+                    Hợp âm Bm: Đặt ngón tay trỏ bấm toàn bộ ngăn 2, ngón tay giữa ở dây 2, ngăn 3. Ngón tay áp út ở dây 4, ngăn 4. Ngón tay út ở dây 3, ngăn 4.
+                </p>
+            </div>
+            <div class="svg-container">
+                <div class="chord">
+                    <h2>Cm</h2>
+                    <i class="fas fa-volume-high speaker-icon" onclick="playChord('Cm')"></i>
+                    <audio id="audio-Cm" src="/chord-music/Cm-major-guitar.wav" preload="auto"></audio>
+                </div>
+                <object type="image/svg+xml" data="/Data/Cm.svg" class="chord-svg"></object>
+                <button class="toggle-btn" onclick="toggleDescription(this)">Xem cách đặt tay</button>
+                <p class="chord-desc">
+                    Hợp âm Cm: Đặt ngón tay trỏ bấm toàn bộ ngăn 3, ngón tay giữa ở dây 4, ngăn 5. Ngón tay áp út ở dây 2, ngăn 4. Ngón tay út ở dây 1, ngăn 4.
+                </p>
+            </div>
+            <div class="svg-container">
+                <div class="chord">
+                    <h2>Dm</h2>
+                    <i class="fas fa-volume-high speaker-icon" onclick="playChord('Dm')"></i>
+                    <audio id="audio-Dm" src="/chord-music/Dm-major-guitar.wav" preload="auto"></audio>
+                </div>
+                <object type="image/svg+xml" data="/Data/Dm.svg" class="chord-svg"></object>
+                <button class="toggle-btn" onclick="toggleDescription(this)">Xem cách đặt tay</button>
+                <p class="chord-desc">
+                    Hợp âm Dm: Đặt ngón tay trỏ ở dây 1, ngăn 1. Ngón tay giữa ở dây 3, ngăn 2. Ngón tay áp út ở dây 2, ngăn 3.
+                </p>
+            </div>
+            <div class="svg-container" >
+                <div class="chord">
+                    <h2>Em</h2>
+                    <i class="fas fa-volume-high speaker-icon" onclick="playChord('Em')"></i>
+                    <audio id="audio-Em" src="/chord-music/Em-major-guitar.wav" preload="auto"></audio>
+                </div>
+                <object type="image/svg+xml" data="/Data/Em.svg" class="chord-svg"></object>
+                <button class="toggle-btn" onclick="toggleDescription(this)">Xem cách đặt tay</button>
+                <p class="chord-desc">
+                    Hợp âm Em: Đặt ngón tay trỏ ở dây 4, ngăn 2. Ngón tay giữa ở dây 5, ngăn 2.
+                </p>
+            </div>
+            <div class="svg-container">
+                <div class="chord" style="margin-top: 25px;">
+                    <h2>Fm</h2>
+                    <i class="fas fa-volume-high speaker-icon" onclick="playChord('Fm')"></i>
+                    <audio id="audio-Fm" src="/chord-music/Fm-major-guitar.wav" preload="auto"></audio>
+                </div>
+                <object type="image/svg+xml" data="/Data/Fm.svg" class="chord-svg"></object>
+                <button class="toggle-btn" onclick="toggleDescription(this)">Xem cách đặt tay</button>
+                <p class="chord-desc">
+                    Hợp âm Fm: Đặt ngón tay trỏ bấm toàn bộ ngăn 1, ngón tay giữa ở dây 2, ngăn 1. Ngón tay áp út ở dây 4, ngăn 3.
+                </p>
+            </div>
+            <div class="svg-container" style="margin-top: 25px;">
+                <div class="chord">
+                    <h2>Gm</h2>
+                    <i class="fas fa-volume-high speaker-icon" onclick="playChord('Gm')"></i>
+                    <audio id="audio-Gm" src="/chord-music/Gm-major-guitar.wav" preload="auto"></audio>
+                </div>
+                <object type="image/svg+xml" data="/Data/Gm.svg" class="chord-svg"></object>
+                <button class="toggle-btn" onclick="toggleDescription(this)">Xem cách đặt tay</button>
+                <p class="chord-desc">
+                    Hợp âm Gm: Đặt ngón tay trỏ bấm toàn bộ ngăn 3, ngón tay giữa ở dây 5, ngăn 5. Ngón tay áp út ở dây 3, ngăn 5. Ngón tay út ở dây 1, ngăn 3.
+                </p>
+            </div>
+            </div>
+        </div>
+        <div class="section">
+            <h1>Hợp âm trưởng Piano</h1>
+            <div class="svg-wrapper">
+                <div class="png-container">
+                    <div class="chord">
+                        <h2>A</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('A_piano')"></i>
+                        <audio id="audio-A_piano" src="/chord-music/A_piano.mp3" preload="auto"></audio>
+                    </div>
+                    <img src="/Data/A.png" class="chord-svg" alt="A Piano Chord Diagram">
+                </div>
+            <div class="png-container">
+                <div class="chord">
+                    <h2>B</h2>
+                    <i class="fas fa-volume-high speaker-icon" onclick="playChord('B_piano')"></i>
+                    <audio id="audio-B_piano" src="/chord-music/B_piano.mp3" preload="auto"></audio>
+                </div>
+                <img src="/Data/B.png" class="chord-svg" alt="B Piano Chord Diagram">
+            </div>
+            <div class="png-container">
+                <div class="chord">
+                    <h2>C</h2>
+                    <i class="fas fa-volume-high speaker-icon" onclick="playChord('C_piano')"></i>
+                    <audio id="audio-C_piano" src="/chord-music/C_piano.mp3" preload="auto"></audio>
+                </div>
+                <img src="/Data/C.png" class="chord-svg" alt="C Piano Chord Diagram">
+            </div>
+            <div class="png-container">
+                <div class="chord">
+                    <h2>D</h2>
+                    <i class="fas fa-volume-high speaker-icon" onclick="playChord('D_piano')"></i>
+                    <audio id="audio-D_piano" src="/chord-music/D_piano.mp3" preload="auto"></audio>
+                </div>
+                <img src="/Data/D.png" class="chord-svg" alt="D Piano Chord Diagram">
+            </div>
+            <div class="png-container">
+                <div class="chord">
+                    <h2>E</h2>
+                    <i class="fas fa-volume-high speaker-icon" onclick="playChord('E_piano')"></i>
+                    <audio id="audio-E_piano" src="/chord-music/E_piano.mp3" preload="auto"></audio>
+                </div>
+                <img src="/Data/E.png" class="chord-svg" alt="E Piano Chord Diagram">
+            </div>
+            <div class="png-container">
+                <div class="chord">
+                    <h2>F</h2>
+                    <i class="fas fa-volume-high speaker-icon" onclick="playChord('F_piano')"></i>
+                    <audio id="audio-F_piano" src="/chord-music/F_piano.mp3" preload="auto"></audio>
+                </div>
+                <img src="/Data/F.png" class="chord-svg" alt="F Piano Chord Diagram">
+            </div>
+            <div class="png-container">
+                <div class="chord">
+                    <h2>G</h2>
+                    <i class="fas fa-volume-high speaker-icon" onclick="playChord('G_piano')"></i>
+                    <audio id="audio-G_piano" src="/chord-music/G_piano.mp3" preload="auto"></audio>
+                </div>
+                <img src="/Data/G.png" class="chord-svg" alt="G Piano Chord Diagram">
+            </div>
+        </div>
+        <div class="section">
+            <h1>Hợp âm thứ piano</h1>
+            <div class="svg-wrapper">
+                <div class="png-container">
+                    <div class="chord">
+                        <h2>Am</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('Am_piano')"></i>
+                        <audio id="audio-Am_piano" src="/chord-music/A_piano.mp3" preload="auto"></audio>
+                    </div>
+                    <img src="/Data/Am.png" class="chord-svg" alt="Am Piano Chord Diagram">
+                </div>
+                <div class="png-container">
+                    <div class="chord">
+                        <h2>Bm</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('Bm_piano')"></i>
+                        <audio id="audio-Bm_piano" src="/chord-music/B_piano.mp3" preload="auto"></audio>
+                    </div>
+                    <img src="/Data/Bm.png" class="chord-svg" alt="Bm Piano Chord Diagram">
+                </div>
+                <div class="png-container">
+                    <div class="chord">
+                        <h2>Cm</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('Cm_piano')"></i>
+                        <audio id="audio-Cm_piano" src="/chord-music/C_piano.mp3" preload="auto"></audio>
+                    </div>
+                    <img src="/Data/Cm.png" class="chord-svg" alt="Cm Piano Chord Diagram">
+                </div>
+                <div class="png-container">
+                    <div class="chord">
+                        <h2>Em</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('Em_piano')"></i>
+                        <audio id="audio-Em_piano" src="/chord-music/E_piano.mp3" preload="auto"></audio>
+                    </div>
+                    <img src="/Data/Em.png" class="chord-svg" alt="Em Piano Chord Diagram">
+                </div>
+                <div class="png-container">
+                    <div class="chord">
+                        <h2>Fm</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('Fm_piano')"></i>
+                        <audio id="audio-Fm_piano" src="/chord-music/F_piano.mp3" preload="auto"></audio>
+                    </div>
+                    <img src="/Data/Fm.png" class="chord-svg" alt="Fm Piano Chord Diagram">
+                </div>
+                <div class="png-container">
+                    <div class="chord">
+                        <h2>Gm</h2>
+                        <i class="fas fa-volume-high speaker-icon" onclick="playChord('Gm_piano')"></i>
+                        <audio id="audio-Gm_piano" src="/chord-music/G_piano.mp3" preload="auto"></audio>
+                    </div>
+                    <img src="/Data/Gm.png" class="chord-svg" alt=" Piano Chord Diagram">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function playChord(chordName) {
+            const audioElement = document.getElementById('audio-' + chordName);
+            if (audioElement) {
+                audioElement.play();
+            }
+        }
+
+        function slideInChords() {
+            const containers = document.querySelectorAll('.svg-container, .png-container');
+            const triggerPoint = window.innerHeight * 0.8; 
+            containers.forEach(container => {
+                const containerTop = container.getBoundingClientRect().top;
+                if (containerTop < triggerPoint) {
+                    container.classList.add('slide-in');
+                }
+            });
+        }
+        window.addEventListener('scroll', slideInChords);
+        window.addEventListener('DOMContentLoaded', slideInChords);
+        function toggleDescription(button) {
+            const desc = button.nextElementSibling;
+            if (desc.classList.contains('show-desc')) {
+                desc.classList.remove('show-desc');
+                button.textContent = 'Xem cách đặt tay';
+            } else {
+                desc.classList.add('show-desc');
+                button.textContent = 'Ẩn cách đặt tay';
+            }
+        }
+    </script>
+
+    </script>
+</body>
+
+</html>

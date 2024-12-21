@@ -1,0 +1,62 @@
+﻿@model WebApplication1.Models.Singer
+
+@{
+    ViewBag.Title = "Sửa Ca Sĩ";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Sửa Ca Sĩ</h2>
+
+@section js {
+    <script src="~/Content/ckeditor/ckeditor.js"></script>
+    <script src="~/Content/ckfinder/ckfinder.js"></script>
+    <script>
+        // Configure CKEditor for the textarea
+        CKEDITOR.replace("Nationality");
+        function BrowseServer() {
+            var finder = new CKFinder();
+            finder.selectActionFunction = SetFileField;
+            finder.popup();
+        }
+    </script>
+}
+
+<form class="form-horizontal" method="post" asp-action="SuaCaSi" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <div class="form-group">
+        <label for="TenCaSi" class="col-sm-2 control-label">Tên Ca Sĩ</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="TenCaSi" name="Name" required value="@Model.Name" placeholder="Nhập tên ca sĩ" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="Nationality" class="col-sm-2 control-label">Nội dung</label>
+        <div class="col-sm-10">
+            <textarea class="form-control" id="Nationality" name="Nationality" required>@Html.Raw(Model.Content)</textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="SingerImage" class="col-sm-2 control-label">Ảnh Ca Sĩ</label>
+        <div class="col-sm-10">
+            <input type="file" class="form-control" id="SingerImage" name="SingerImage" />
+            @if (!string.IsNullOrEmpty(Model.Image))
+            {
+                <img src="@Model.Image" alt="Image" style="width: 100px; height: 100px;" />
+            }
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-check"></i>&nbsp;Cập nhật
+            </button>
+            <a href="@Url.Action("QuanLiCaSi","Admin")" class="btn btn-success">
+                <i class="fa fa-reply"></i>&nbsp;Danh sách ca sĩ
+            </a>
+        </div>
+    </div>
+</form>

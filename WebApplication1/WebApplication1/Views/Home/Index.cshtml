@@ -1,0 +1,725 @@
+﻿@using WebApplication1.Models;
+@model (List<Song> songs, List<Singer> singers, List<SongSinger> songSingers)
+
+@{
+    ViewData["Title"] = "Kết quả tìm kiếm";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Comments</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .custom-card {
+            margin-bottom: 20px;
+        }
+
+            .custom-card .card-text {
+                color: #495057;
+            }
+
+            .custom-card .card-title {
+                color: #343a40;
+            }
+
+            .custom-card .card-body {
+                padding: 10px !important;
+                background-color: #f8f9fa;
+            }
+
+            .custom-card .title h2 {
+                font-size: 30px;
+                line-height: 39px;
+            }
+
+            .custom-card .card-img {
+                width: 500px;
+                height: 200px;
+                object-fit: cover;
+                text-align: center;
+            }
+
+        .song-card {
+            max-width: 90%;
+            margin: 0 auto;
+        }
+
+            .song-card .card-img {
+                width: 150px;
+                height: 100px;
+                object-fit: cover;
+            }
+
+            .song-card .card-body {
+                padding: 10px;
+                background-color: #f0f0f0;
+            }
+
+            .song-card .card-title {
+                font-size: 14px;
+            }
+
+            .song-card .card-text {
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+        .custom-card .content-song {
+            background: #e9ecef;
+        }
+
+            .custom-card .content-song:hover {
+                background: #cee6e6;
+            }
+
+        .custom-card .card-body-song:hover {
+            background: #cee6e6;
+        }
+
+        .custom-card .custom-card .custom-card .card-title,
+        .custom-card .card-text {
+            color: #333;
+        }
+
+        .custom-card .col-md-5 {
+            max-width: 30%;
+        }
+
+        .content-song {
+            width: 100%;
+            /* Phủ hết chiều rộng của cha */
+            height: 100%;
+            /* Phủ hết chiều cao của cha */
+        }
+
+            .content-song .embed-responsive {
+                width: 100%;
+                /* Phủ hết chiều rộng của cha */
+                height: 100%;
+                /* Phủ hết chiều cao của cha */
+            }
+
+            .content-song .embed-responsive-item {
+                width: 100%;
+                /* Phủ hết chiều rộng của cha */
+                height: 100%;
+                /* Phủ hết chiều cao của cha */
+            }
+
+        .iframe-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+            .iframe-wrapper iframe {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        /* Styles for user comments */
+        .user-comments-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .user-comments-card-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: -20px;
+        }
+
+        .user-comment-card {
+            flex-basis: 100%;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.5s ease;
+        }
+
+            .user-comment-card .content {
+                color: #333;
+                font-size: 16px;
+                line-height: 1.6;
+                margin-top: 15px;
+                flex-grow: 1;
+            }
+
+            .user-comment-card .user-info {
+                display: flex;
+                align-items: center;
+            }
+
+            .user-comment-card .avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                margin-right: 15px;
+                border: 2px solid #ccc;
+            }
+
+            .user-comment-card .username {
+                color: #007bff;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                .user-comment-card .username:hover {
+                    text-decoration: underline;
+                }
+
+            .user-comment-card .country {
+                color: #666;
+                margin-left: 5px;
+            }
+
+            .user-comment-card .date {
+                color: #999;
+                font-size: 14px;
+                margin-left: auto;
+            }
+
+            .user-comment-card .rating {
+                display: flex;
+                align-items: center;
+                margin-top: 10px;
+            }
+
+            .user-comment-card .stars {
+                color: #ffc107;
+                font-size: 20px;
+                margin-right: 5px;
+            }
+
+            .user-comment-card .rating-text {
+                color: #333;
+                font-weight: bold;
+                font-size: 16px;
+            }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+            .pagination-container button {
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 5px;
+                padding: 8px 16px;
+                margin: 0 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+                .pagination-container button:hover {
+                    background-color: #0056b3;
+                }
+
+                .pagination-container button.active {
+                    background-color: #0056b3;
+                }
+
+        .img-responsive {
+            width: 100%;
+            height: 100%;
+        }
+
+        .contact-information {
+            margin-left: 10px;
+        }
+
+            .contact-information li {
+                margin-bottom: 10px;
+            }
+
+        .row-right {
+            margin-top: 70px;
+        }
+
+            .row-right h5 {
+                font-size: 25px;
+                font-family: "roboto-black";
+                text-align: center;
+            }
+
+            .row-right li {
+                margin-top: 5px;
+                margin-bottom: 5px;
+                font-size: 13px;
+                text-align: center;
+            }
+
+        .social-networks {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+            .social-networks a {
+                margin-left: 15px;
+            }
+
+                .social-networks a i {
+                    font-size: 25px;
+                }
+
+        .content-wrap {
+            overflow-x: hidden;
+        }
+
+        .carousel-item img {
+            max-height: 600px;
+            width: 100%;
+            object-fit: initial;
+        }
+
+        .carousel-item h5 {
+            font-size: 40px;
+            line-height: 5px;
+            margin-bottom: 40px;
+        }
+
+        .carousel-item p {
+            font-size: 15px;
+            line-height: 5px;
+        }
+
+        .custom-card .welcome-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            margin-top: 10px;
+        }
+
+            .custom-card .welcome-text strong {
+                font-weight: bold;
+                color: #007bff;
+                /* Blue color */
+            }
+    </style>
+</head>
+
+<body>
+    @*<div class="container">
+    <div class="row">*@
+    <!-- LEFT -->
+    
+
+    <div class="custom-card">
+        <div class="card border-0">
+            <div class="title">
+                <h2>Hợp âm hot</h2>
+            </div>
+            <div class="row no-gutters">
+                <!-- Left Column -->
+                <div class="col-md-4">
+                    <img src="~/img/anh7.jpeg" alt="anh-nen-hop-am-hot" class="card-img"
+                         style="width:100%;height:50%;object-fit:cover">
+                    <p class="welcome-text">
+                        Chào mừng bạn đến với website chúng tôi, nơi bạn có thể
+                        khám phá và chia sẻ <strong>hợp âm đỉnh cao</strong> mọi lúc, mọi nơi! Với
+                        một cộng đồng đam mê âm nhạc rộng lớn, chúng tôi tự hào giới thiệu các tính
+                        năng hấp dẫn giúp bạn trải nghiệm sự tiện ích và thú vị.
+                    </p>
+                </div>
+                <!-- Right Column -->
+                <div class="col-md-8">
+                    @if (Model.songSingers.Any(song_singer => Model.songs.Any(song => song.Id ==
+                    song_singer.IdSong && song.Activity == true)))
+                    {
+                        @foreach (var song_singer in Model.songSingers)
+                        {
+                            if (song_singer.IdSong != null && song_singer.IdSinger != null)
+                            {
+                                foreach (var song in Model.songs)
+                                {
+                                    if (song.Id == song_singer.IdSong && song.Activity == true)
+                                    {
+                                        <div class="card-body">
+                                            <!-- Song Card -->
+                                            <div class="card mb-3 song-card custom-card">
+                                                <div class="row content-song">
+                                                    <!-- Left Column -->
+                                                    <div class="col-md-5">
+                                                        <div class="embed-responsive embed-responsive-16by9">
+                                                            <div class="iframe-wrapper">
+                                                                <iframe class="embed-responsive-item" src="@song.Link"
+                                                                        allowfullscreen></iframe>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Right Column -->
+                                                    <div class="col-md-7">
+                                                        <div class="card-body-song">
+                                                            <div class="card-title">
+                                                                <a href="@Url.Action("ChiTiet", "BaiViet" , new {
+                                                                    metatitle=song.Url, id=song.Id })">
+                                                                    Bài hát:
+                                                                    @song.Name
+                                                                </a>
+                                                            </div>
+                                                            <p class="card-text">
+                                                                @foreach (var singer in Model.singers)
+                                                                {
+                                                                    if (singer.Id == song_singer.IdSinger)
+                                                                    {
+                                                                        <a>Ca sĩ: @singer.Name</a>
+                                                                    }
+                                                                }
+                                                            </p>
+                                                            <p class="card-text">
+                                                                <small class="text-muted">
+                                                                    Ngày cập
+                                                                    nhật: @song.DateTime
+                                                                </small>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-md-12">
+                            <p>Không có bài hát hoạt động nào để hiển thị.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="custom-card">
+        <div class="card border-0">
+            <div class="title">
+                <h2>Bài hát hot</h2>
+            </div>
+            <div class="row no-gutters">
+                <!-- Left Column -->
+                <div class="col-md-4">
+                    <img src="~/img/anh8.jpeg" alt="anh-nen-hop-am-hot" class="card-img"
+                         style="width:100%;height:50%;object-fit:cover">
+                    <p class="welcome-text">
+                        Bài hát hot không chỉ là những ca khúc được yêu thích mà
+                        còn là nguồn cảm hứng lớn cho người nghe. Tại đây, bạn sẽ được cập nhật về
+                        những bài hát được xem nhiều nhất, được yêu thích nhất trong thời gian gần
+                        đây.Hãy cùng nhau khám phá và chia sẻ niềm đam mê âm nhạc tại trang web hợp
+                        âm ngay hôm nay!
+                    </p>
+                </div>
+                <!-- Right Column -->
+                <div class="col-md-8">
+                    @if (Model.songSingers.Any(song_singer => Model.songs.Any(song => song.Id ==
+                    song_singer.IdSong && song.Activity == true)))
+                    {
+                        @foreach (var song_singer in Model.songSingers)
+                        {
+                            if (song_singer.IdSong != null && song_singer.IdSinger != null)
+                            {
+                                foreach (var song in Model.songs)
+                                {
+                                    if (song.Id == song_singer.IdSong && song.Activity == true)
+                                    {
+                                        <div class="card-body">
+                                            <!-- Song Card -->
+                                            <div class="card mb-3 song-card custom-card">
+                                                <div class="row content-song">
+                                                    <!-- Left Column -->
+                                                    <div class="col-md-5">
+                                                        <div class="embed-responsive embed-responsive-16by9">
+                                                            <div class="iframe-wrapper">
+                                                                <iframe class="embed-responsive-item" src="@song.Link"
+                                                                        allowfullscreen></iframe>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Right Column -->
+                                                    <div class="col-md-7">
+                                                        <div class="card-body-song">
+                                                            <div class="card-title">
+                                                                <a href="@Url.Action(" ChiTiet", "BaiViet" , new {
+                                                                    metatitle=song.Url, id=song.Id })">
+                                                                    Bài hát:
+                                                                    @song.Name
+                                                                </a>
+                                                            </div>
+                                                            <p class="card-text">
+                                                                @foreach (var singer in Model.singers)
+                                                                {
+                                                                    if (singer.Id == song_singer.IdSinger)
+                                                                    {
+                                                                        <a>Ca sĩ: @singer.Name</a>
+                                                                    }
+                                                                }
+                                                            </p>
+                                                            <p class="card-text">
+                                                                <small class="text-muted">
+                                                                    Ngày cập
+                                                                    nhật: @song.DateTime
+                                                                </small>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-md-12">
+                            <p>Không có bài hát hoạt động nào để hiển thị.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<!-- RIGHT -->
+    <div class="col-md-6 offset-md-3">
+    <h4 class="main-title"><span>HỢP ÂM MỚI</span></h4>
+    @foreach (var song_singer in Model.songSingers)
+    {
+    if(song_singer.IdSong != null && song_singer.IdSinger != null)
+    {
+    <div class="card mb-3">
+    <div class="card-body">
+    <h5 class="card-title">
+    @foreach(var song in Model.songs)
+    {
+    if(song.Id == song_singer.IdSong && song.Activity == true)
+    {
+    <a href="@Url.Action(" ChiTiet", "BaiViet" , new { metatitle=song.Url,
+    id=song.Id })">
+    @song.Name
+    </a>
+    }
+    }
+    @foreach(var singer in Model.singers)
+    {
+    if(singer.Id == song_singer.IdSinger)
+    {
+    <a>
+    @singer.Name
+    </a>
+    }
+    }
+    </h5>
+    </div>
+    </div>
+    }
+    }
+    </div>
+    </div>
+    </div>
+
+    *@
+
+    @*<div class="row">
+    <div class="col-md-8">
+    <h4 class="main-title"> <span>TIN PHÁP LUẬT MỚI</span> </h4>
+    @foreach (var item in Model)
+    {
+    if (Model.IndexOf(item) != 3 && Model.IndexOf(item) != 4)
+    {
+    <div class="col-md-4 col-sm-4">
+    <div class="container-block img-lienket">
+    <a href="~/hop-am/@item.Url-@item.ID">
+    <img src="@item.Avatar" alt="@item.TenDV" style="width:100%; height: 227px">
+    </a>
+    <div class="text-block">
+    <a href="~/hop-am/@item.Url-@item.ID">
+    <h4>@item.TenDV</h4>
+    </a>
+    </div>
+    </div>
+    </div>
+    }
+    else
+    {
+    <div class="col-md-6 col-sm-6" style="margin: 10px 0 10px 0">
+    <div class="container-block img-lienket">
+    <a href="~/hop-am/@item.Url-@item.ID">
+    <img src="@item.Avatar" alt="@item.TenDV" style="width:100%; height: 335px">
+    </a>
+    <div class="text-block">
+    <a href="~/hop-am/@item.Url-@item.ID">
+    <h3>@item.TenDV</h3>
+    </a>
+    </div>
+    </div>
+    </div>
+    }
+
+    </div>
+
+    <div class="col-md-4">
+    <h4 class="main-title"><span>CÁC BÀI VIẾT XEM NHIỀU</span></h4>
+    @foreach (var item in ViewBag.XemNhieu)
+    {
+    <div class="row no-gutters" style="margin-bottom:15px">
+    <div class="col-md-4 img-lienket">
+    <a href="~/hop-am/@item.Url-@item.ID">
+    <img src="@item.Avatar" style="width:125px; height:70px">
+    </a>
+    </div>
+    <div class="col-md-8">
+    <a href="~/hop-am/@item.Url-@item.ID">
+    @item.TenDV
+    </a>
+    </div>
+    </div>
+    }
+    </div>
+    </div>*@
+
+    <!-- User Comments Section -->
+    <div style="text-align:center">
+        <h2>Bình luận người dùng</h2>
+    </div>
+
+    <div class="user-comments-container">
+        <div class="user-comments-card-container">
+            <!-- User comment cards will be dynamically generated here -->
+        </div>
+
+        <!-- Pagination buttons will be displayed here -->
+        <div class="pagination-container"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Danh sách bình luận
+            const comments = [
+                {
+                    avatar: "./img/1.jpg",
+                    username: "Thái Trung Nguyên",
+                    country: "Việt Nam",
+                    date: "April 1, 2023",
+                    content: "Wow, web chord cực kỳ tiện lợi! Tìm bất kỳ bản nhạc nào chỉ trong vài giây và có ngay các hợp âm đầy đủ, thậm chí còn có cả diagram hợp âm để dễ dàng hơn. Thật là một công cụ tuyệt vời cho các nhạc sĩ và người chơi nhạc!",
+                    stars: 5
+                },
+                {
+                    avatar: "./img/2.jpg",
+                    username: "Trịnh Huyền",
+                    country: "Việt Nam",
+                    date: "April 2, 2023",
+                    content: "Tôi thực sự thích cách mà web chord tự động cập nhật hợp âm mới và phổ biến. Nó giúp tôi tiếp cận với những bài hát mới nhất mà tôi muốn chơi một cách dễ dàng nhất.",
+                    stars: 5
+                },
+                {
+                    avatar: "./img/3.jpg",
+                    username: "An Khánh Hoàng",
+                    country: "Việt Nam",
+                    date: "April 3, 2023",
+                    content: "Web chord thực sự là một người bạn đắc lực của tôi khi tôi muốn học một bài hát mới. Việc có thể xem hợp âm và cả diagram giúp tôi hiểu rõ hơn về cách chơi nhạc, đồng thời tiết kiệm thời gian tìm kiếm hợp âm.",
+                    stars: 5
+                },
+                {
+                    avatar: "./anh4.jpeg",
+                    username: "User 4",
+                    country: "Country 4",
+                    date: "April 3, 2023",
+                    content: "Tôi đã sử dụng nhiều trang web hợp âm nhưng web chord là một trong những trang đáng tin cậy nhất mà tôi từng dùng. Hệ thống tìm kiếm thông minh và cách sắp xếp hợp âm rất dễ dàng làm cho việc tìm kiếm và chơi nhạc trở nên thú vị hơn bao giờ hết.",
+                    stars: 5
+                }
+            ];
+
+            // Số bình luận mỗi trang
+            const perPage = 3;
+
+            // Tính tổng số trang
+            const totalPages = Math.ceil(comments.length / perPage);
+
+            // Hàm hiển thị bình luận theo trang
+            function displayComments(page) {
+                const startIndex = (page - 1) * perPage;
+                const endIndex = startIndex + perPage;
+                const pageComments = comments.slice(startIndex, endIndex);
+
+                const commentsContainer = document.querySelector(".user-comments-card-container");
+                commentsContainer.innerHTML = "";
+
+                pageComments.forEach(comment => {
+                    const card = document.createElement("div");
+                    card.classList.add("user-comment-card");
+
+                    // Tạo HTML cho mỗi bình luận
+                    card.innerHTML = `
+                            <div class="user-info">
+                                <img src="${comment.avatar}" alt="User Avatar" class="avatar">
+                                <div class="info">
+                                    <a href="#" class="username">${comment.username}</a>
+                                    <span class="country">— ${comment.country}</span>
+                                    <small class="date">${comment.date}</small>
+                                </div>
+                            </div>
+                            <p class="content">${comment.content}</p>
+                            <div class="rating">
+                                <span class="stars">${'&#9733;'.repeat(comment.stars)}</span>
+                            </div>
+                        `;
+
+                    commentsContainer.appendChild(card);
+                });
+            }
+
+            // Hàm hiển thị nút điều hướng phân trang
+            function displayPagination() {
+                const paginationContainer = document.querySelector(".pagination-container");
+                paginationContainer.innerHTML = "";
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const button = document.createElement("button");
+                    button.innerText = i;
+                    button.addEventListener("click", function () {
+                        displayComments(i);
+                        updateActiveButton(i);
+                    });
+                    paginationContainer.appendChild(button);
+                }
+            }
+
+            // Hiển thị trang đầu tiên ban đầu
+            displayComments(1);
+            displayPagination();
+
+            // Hàm cập nhật nút điều hướng được chọn
+            function updateActiveButton(selectedPage) {
+                const buttons = document.querySelectorAll(".pagination-container button");
+                buttons.forEach(button => {
+                    if (parseInt(button.innerText) === selectedPage) {
+                        button.classList.add("active");
+                    } else {
+                        button.classList.remove("active");
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
